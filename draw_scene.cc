@@ -31,11 +31,87 @@
 //
 // Please contact the author of this library if you have any questions.
 // TODO: Add your names and emails using the following format:
-// Author: Victor Fragoso (victor.fragoso@mail.wvu.edu)
+// Author: Shelby Shuff (sshuff@mix.wvu.edu)
+// Author:
 
+#include <iostream>
+#include <string>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glog/logging.h>
 // TODO: Include the headers you need for your project.
 
+constexpr int kWindowWidth = 640;
+constexpr int kWindowHeight = 480;
+
+static void ErrorCallback(int error, const char* description) {
+  LOG(FATAL) << description;
+}
+
+// sets opengl version
+// open the window
+// sets resizable to false
+void SetWindowHints() {
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+}
+
+void ConfigureViewPort(GLFWwindow* window) {
+  int width;
+  int height;
+  glfwGetFramebufferSize(window, &width, &height);
+  glViewport(0, 0, width, height);
+}
+
 int main(int argc, char** argv) {
-  // TODO: Implement the logic here to draw your scene.
+  if (!glfwInit()) {
+    return -1;
+  }
+
+  glfwSetErrorCallback(ErrorCallback);
+
+  SetWindowHints();
+
+  const std::string window_name = "A christmas scene";
+  GLFWwindow* window = glfwCreateWindow(kWindowWidth,
+                                        kWindowHeight,
+                                        window_name.c_str(),
+                                        nullptr,
+                                        nullptr);
+
+
+  if (!window) {
+    glfwTerminate();
+    return -1;
+  }
+  glfwMakeContextCurrent(window);
+  glfwSwapInterval(1);
+
+  // glfwSetKeyCallback(window, KeyCallback);
+
+  if (glewInit() != GLEW_OK) {
+    LOG(FATAL) << "Glew did not initialize properly!";
+    glfwTerminate();
+    return -1;
+  }
+
+  ConfigureViewPort(window);
+
+  // Loop until the user closes the window.
+  while (!glfwWindowShouldClose(window)) {
+    // Render the scene!
+    // TODO: Implement the logic here to draw your scene.
+    // RenderScene(shader_program, projection, view, &models_to_draw, window);
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
+
+  glfwDestroyWindow(window);
+  glfwTerminate();
   return 0;
 }
