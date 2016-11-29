@@ -39,10 +39,29 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glog/logging.h>
+#include "shader_program.h"
 // TODO: Include the headers you need for your project.
 
 constexpr int kWindowWidth = 640;
 constexpr int kWindowHeight = 480;
+
+const std::string vertex_shader_src =
+    "#version 330 core\n"
+    "layout (location = 0) in vec3 position;\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 view;\n"
+    "uniform mat4 projection;\n"
+    "\n"
+    "void main() {\n"
+    "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+    "}\n";
+
+const std::string fragment_shader_src =
+    "#version 330 core\n"
+    "out vec4 color;\n"
+    "void main() {\n"
+    "color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n";
 
 static void ErrorCallback(int error, const char* description) {
   LOG(FATAL) << description;
@@ -65,6 +84,21 @@ void ConfigureViewPort(GLFWwindow* window) {
   int height;
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
+}
+
+bool CreateShaderProgram(project::ShaderProgram* shader_program) {
+  if (shader_program == nullptr) return false;
+  shader_program->LoadVertexShaderFromString(vertex_shader_src);
+  shader_program->LoadFragmentShaderFromString(fragment_shader_src);
+  std::string error_info_log;
+  if (!shader_program->Create(&error_info_log)) {
+    std::cout << "ERROR: " << error_info_log << "\n";
+  }
+  if (!shader_program->shader_program_id()) {
+    std::cerr << "ERROR: Could not create a shader program.\n";
+    return false;
+  }
+  return true;
 }
 
 int main(int argc, char** argv) {
@@ -101,6 +135,10 @@ int main(int argc, char** argv) {
 
   ConfigureViewPort(window);
 
+  project::ShaderProgram shader;
+  if (!CreateShaderProgram(&shader)) {
+    return -1;
+  }
   // Loop until the user closes the window.
   while (!glfwWindowShouldClose(window)) {
     // Render the scene!

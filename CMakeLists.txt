@@ -107,7 +107,9 @@ INCLUDE_DIRECTORIES(
 # SET(SRC_FILES shader_program.cc utils.cc)
 SET(SRC_FILES)
 
-ADD_EXECUTABLE(draw_scene draw_scene.cc ${SRC_FILES})
+ADD_EXECUTABLE(draw_scene draw_scene.cc
+  shader_program.cc
+  ${SRC_FILES})
 TARGET_LINK_LIBRARIES(draw_scene
   glfw
   ${OPENGL_LIBRARIES}
