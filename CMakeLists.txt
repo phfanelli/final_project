@@ -109,7 +109,10 @@ SET(SRC_FILES)
 
 ADD_EXECUTABLE(draw_scene draw_scene.cc
   shader_program.cc
-  ${SRC_FILES})
+  model.cc
+  transformations.cc
+  camera_utils.cc
+  model_creator.cc)
 TARGET_LINK_LIBRARIES(draw_scene
   glfw
   ${OPENGL_LIBRARIES}
