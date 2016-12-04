@@ -35,9 +35,11 @@
 #include "model.h"
 #include <iostream>
 #include <string>
+#include <CImg.h>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <gflags/gflags.h>
 #include <GL/glew.h>
 
 #include "shader_program.h"
@@ -58,11 +60,13 @@ Model::Model(const Eigen::Vector3f& orientation,
 Model::Model(const Eigen::Vector3f& orientation,
              const Eigen::Vector3f& position,
              const Eigen::MatrixXf& vertices,
-             const std::vector<GLuint>& indices) {
+             const std::vector<GLuint>& indices,
+             const GLuint& texture_id) {
   orientation_ = orientation;
   position_ = position;
   vertices_ = vertices;
   indices_ = indices;
+  texture_id_ = texture_id;
   vertex_buffer_object_id_ = 0;
   vertex_array_object_id_ = 0;
   element_buffer_object_id_ = 0;
@@ -115,6 +119,10 @@ const std::vector<GLuint>& Model::indices() const {
   return indices_;
 }
 
+const GLuint& Model::texture_id() const {
+  return texture_id_;
+}
+
 const GLuint Model::vertex_buffer_object_id() const {
   return vertex_buffer_object_id_;
 }
@@ -152,10 +160,17 @@ void Model::SetVerticesIntoGpu() {
   glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices_.data(), GL_STATIC_DRAW);
   constexpr GLuint kIndex = 0;
   constexpr GLuint kNumElementsPerVertex = 3;
-  constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices_(0, 0));
+  constexpr GLuint kStride = 5 * sizeof(vertices_(0, 0));
   const GLvoid* offset_ptr = nullptr;
   glVertexAttribPointer(kIndex, kNumElementsPerVertex, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
   glEnableVertexAttribArray(kIndex);
+
+  const GLvoid* offset_texel = reinterpret_cast<GLvoid*>(3 * sizeof(vertices_(0, 0)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                        kStride, offset_texel);
+  glEnableVertexAttribArray(1);
+
+
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   //ebo
@@ -176,12 +191,19 @@ void Model::Draw(const ShaderProgram& shader_program,
   const GLint model_location = glGetUniformLocation(shader_program.shader_program_id(), "model");
   const GLint view_location = glGetUniformLocation(shader_program.shader_program_id(), "view");
   const GLint projection_location = glGetUniformLocation(shader_program.shader_program_id(), "projection");
+
+  glBindTexture(GL_TEXTURE_2D, texture_id_);
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model_matrix.data());
   glUniformMatrix4fv(view_location, 1, GL_FALSE, view.data());
   glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.data());
+
+
   glBindVertexArray(vertex_array_object_id_);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+
+
+
 }
 
 }  // namespace wvu

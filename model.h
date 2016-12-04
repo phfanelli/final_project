@@ -67,7 +67,8 @@ public:
   Model(const Eigen::Vector3f& orientation,
         const Eigen::Vector3f& position,
         const Eigen::MatrixXf& vertices,
-        const std::vector<GLuint>& indices);
+        const std::vector<GLuint>& indices,
+        const GLuint& texture_id);
 
   // Destructor.
   // NOTE: Destructors need to be called when instances of this class are
@@ -120,6 +121,9 @@ public:
   // Returns a const reference of the indices for an EBO.
   const std::vector<GLuint>& indices() const;
 
+  // Returns a const reference of the texture_id_ for an EBO.
+  const GLuint& texture_id() const;
+
   // Returns the VBO id associated to this model.
   const GLuint vertex_buffer_object_id();
   const GLuint vertex_buffer_object_id() const;
@@ -144,6 +148,8 @@ private:
   Eigen::MatrixXf vertices_;
   // Indices for EBO.
   std::vector<GLuint> indices_;
+
+  GLuint texture_id_;
   // Vertex buffer object id.
   GLuint vertex_buffer_object_id_;
   // Vertex array object id.

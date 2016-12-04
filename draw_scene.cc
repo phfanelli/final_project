@@ -104,8 +104,9 @@ void ConfigureViewPort(GLFWwindow* window) {
 }
 
 void ClearTheFrameBuffer() {
+  glEnable(GL_DEPTH_TEST);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 bool CreateShaderProgram(wvu::ShaderProgram* shader_program) {
@@ -130,19 +131,19 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
                  GLFWwindow* window) {
   ClearTheFrameBuffer();
   shader_program.Use();
-  // Render the models in a wireframe mode.
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   // Draw the models.
   for (Model* model : *models_to_draw) {
     Eigen::Vector3f t = model->orientation();
-    // model->set_orientation(Eigen::Vector3f(t(0)+0.0006, t(1)+0.0006, t(2)));
     model->Draw(shader_program, projection, view);
+
   }
   glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ConstructModels(std::vector<Model*>* models_to_draw) {
   wvu::CreateVerticesModel(models_to_draw);
+  // wvu::CreateLoadedModel(models_to_draw);
   for (Model* model : *models_to_draw) {
     model->SetVerticesIntoGpu();
   }
