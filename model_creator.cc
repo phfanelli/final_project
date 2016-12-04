@@ -44,10 +44,11 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
   // 7
   cube_vertices.block(0, 7, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
   cube_vertices.block(3, 7, 2, 1) = Eigen::Vector2f(1, 0);
-
+  const std::string texture_filepath = "../texture2.png";
+  const GLuint texture_id = LoadTexture(texture_filepath);
   Eigen::Vector3f orientation(1, 0, 0);
 
-  models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, 0));
+  models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, texture_id));
 }
 
 GLuint LoadTexture(const std::string& texture_filepath) {

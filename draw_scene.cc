@@ -55,19 +55,24 @@ constexpr int kWindowHeight = 480;
 const std::string vertex_shader_src =
     "#version 330 core\n"
     "layout (location = 0) in vec3 position;\n"
+    "layout (location = 1) in vec2 passed_texel;\n"
     "uniform mat4 model;\n"
     "uniform mat4 view;\n"
     "uniform mat4 projection;\n"
+    "out vec2 texel;\n"
     "\n"
     "void main() {\n"
     "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+    "texel = passed_texel;\n"
     "}\n";
 
 const std::string fragment_shader_src =
     "#version 330 core\n"
     "out vec4 color;\n"
+    "in vec2 texel;\n"
+    "uniform sampler2D texture_sampler;\n"
     "void main() {\n"
-    "color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "color = texture(texture_sampler, texel);\n"
     "}\n";
 
 static void ErrorCallback(int error, const char* description) {
