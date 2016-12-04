@@ -1,6 +1,7 @@
-#include "model_creator.h"
+
 #define cimg_display 0
 #include <CImg.h>
+#include "model_creator.h"
 
 namespace wvu {
 void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
@@ -47,8 +48,9 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
   const std::string texture_filepath = "../texture2.png";
   const GLuint texture_id = LoadTexture(texture_filepath);
   Eigen::Vector3f orientation(1, 0, 0);
+  Eigen::Vector3f movement(0.0006,0.0006,0);
 
-  models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, texture_id));
+  models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, texture_id, movement));
 }
 
 GLuint LoadTexture(const std::string& texture_filepath) {

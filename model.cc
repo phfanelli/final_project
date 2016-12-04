@@ -61,12 +61,14 @@ Model::Model(const Eigen::Vector3f& orientation,
              const Eigen::Vector3f& position,
              const Eigen::MatrixXf& vertices,
              const std::vector<GLuint>& indices,
-             const GLuint& texture_id) {
+             const GLuint& texture_id,
+             const Eigen::Vector3f& movement) {
   orientation_ = orientation;
   position_ = position;
   vertices_ = vertices;
   indices_ = indices;
   texture_id_ = texture_id;
+  movement_ = movement;
   vertex_buffer_object_id_ = 0;
   vertex_array_object_id_ = 0;
   element_buffer_object_id_ = 0;
@@ -121,6 +123,10 @@ const std::vector<GLuint>& Model::indices() const {
 
 const GLuint& Model::texture_id() const {
   return texture_id_;
+}
+
+const Eigen::Vector3f& Model::movement() const {
+  return movement_;
 }
 
 const GLuint Model::vertex_buffer_object_id() const {

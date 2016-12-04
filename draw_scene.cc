@@ -138,7 +138,9 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
   shader_program.Use();
   // Draw the models.
   for (Model* model : *models_to_draw) {
-    Eigen::Vector3f t = model->orientation();
+    Eigen::Vector3f orientation = model->orientation();
+    Eigen::Vector3f movement = model->movement();
+    model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
     model->Draw(shader_program, projection, view);
 
   }
