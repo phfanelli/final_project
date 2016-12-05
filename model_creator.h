@@ -5,6 +5,7 @@
 #include "model.h"
 namespace wvu {
 void CreateVerticesModel(std::vector<Model*>* models_to_draw);
+void CreateLoadedModel(std::vector<Model*>* models_to_draw);
 GLuint LoadTexture(const std::string& texture_filepath);
 }
 

@@ -112,7 +112,8 @@ ADD_EXECUTABLE(draw_scene draw_scene.cc
   model.cc
   transformations.cc
   camera_utils.cc
-  model_creator.cc)
+  model_creator.cc
+  model_loader.cc)
 TARGET_LINK_LIBRARIES(draw_scene
   glfw
   ${OPENGL_LIBRARIES}

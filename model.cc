@@ -31,7 +31,8 @@
 //
 // Please contact the author of this library if you have any questions.
 // Author: Victor Fragoso (victor.fragoso@mail.wvu.edu)
-
+#define _USE_MATH_DEFINES  // For using M_PI.
+#include <cmath>
 #include "model.h"
 #include <iostream>
 #include <string>
@@ -40,22 +41,29 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <gflags/gflags.h>
+#define GLEW_STATIC
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "shader_program.h"
 #include "transformations.h"
 
 namespace wvu {
-Model::Model(const Eigen::Vector3f& orientation,
-             const Eigen::Vector3f& position,
-             const Eigen::MatrixXf& vertices) {
-  orientation_ = orientation;
-  position_ = position;
-  vertices_ = vertices;
-  vertex_buffer_object_id_ = 0;
-  vertex_array_object_id_ = 0;
-  element_buffer_object_id_ = 0;
-}
+  Model::Model(const Eigen::Vector3f& orientation,
+               const Eigen::Vector3f& position,
+               const Eigen::MatrixXf& vertices,
+               const std::vector<GLuint>& indices,
+               const Eigen::Vector3f& movement) {
+    orientation_ = orientation;
+    position_ = position;
+    vertices_ = vertices;
+    indices_ = indices;
+    texture_id_ = -1;
+    movement_ = movement;
+    vertex_buffer_object_id_ = 0;
+    vertex_array_object_id_ = 0;
+    element_buffer_object_id_ = 0;
+  }
 
 Model::Model(const Eigen::Vector3f& orientation,
              const Eigen::Vector3f& position,
@@ -165,16 +173,25 @@ void Model::SetVerticesIntoGpu() {
   const int vertices_size = vertices_.rows() * vertices_.cols() * sizeof(vertices_(0,0));
   glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices_.data(), GL_STATIC_DRAW);
   constexpr GLuint kIndex = 0;
-  constexpr GLuint kNumElementsPerVertex = 3;
-  constexpr GLuint kStride = 5 * sizeof(vertices_(0, 0));
-  const GLvoid* offset_ptr = nullptr;
-  glVertexAttribPointer(kIndex, kNumElementsPerVertex, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
-  glEnableVertexAttribArray(kIndex);
 
-  const GLvoid* offset_texel = reinterpret_cast<GLvoid*>(3 * sizeof(vertices_(0, 0)));
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-                        kStride, offset_texel);
-  glEnableVertexAttribArray(1);
+  if(texture_id() == -1) {
+    constexpr GLuint kNumElementsPerVertex = 3;
+    constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices_(0, 0));
+    const GLvoid* offset_ptr = nullptr;
+    glVertexAttribPointer(kIndex, kNumElementsPerVertex, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
+    glEnableVertexAttribArray(kIndex);
+  } else {
+    constexpr GLuint kNumElementsPerVertex = 5;
+    constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices_(0, 0));
+    const GLvoid* offset_ptr = nullptr;
+    glVertexAttribPointer(kIndex, 3, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
+    glEnableVertexAttribArray(kIndex);
+
+    const GLvoid* offset_texel = reinterpret_cast<GLvoid*>(3 * sizeof(vertices_(0, 0)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                          kStride, offset_texel);
+    glEnableVertexAttribArray(1);
+  }
 
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -198,7 +215,13 @@ void Model::Draw(const ShaderProgram& shader_program,
   const GLint view_location = glGetUniformLocation(shader_program.shader_program_id(), "view");
   const GLint projection_location = glGetUniformLocation(shader_program.shader_program_id(), "projection");
 
-  glBindTexture(GL_TEXTURE_2D, texture_id_);
+
+  if(texture_id() != -1) {
+    glBindTexture(GL_TEXTURE_2D, texture_id_);
+  } else {
+    
+  }
+
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model_matrix.data());
   glUniformMatrix4fv(view_location, 1, GL_FALSE, view.data());
   glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.data());

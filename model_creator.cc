@@ -2,6 +2,7 @@
 #define cimg_display 0
 #include <CImg.h>
 #include "model_creator.h"
+#include "model_loader.h"
 
 namespace wvu {
 void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
@@ -51,6 +52,30 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
   Eigen::Vector3f movement(0.0006,0.0006,0);
 
   models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, texture_id, movement));
+}
+
+void CreateLoadedModel(std::vector<Model*>* models_to_draw) {
+  std::vector<Eigen::Vector3f> model_vertices;
+  std::vector<Eigen::Vector2f> model_texels;
+  std::vector<Eigen::Vector3f> model_normals;
+  std::vector<wvu::Face> model_faces;
+  wvu::LoadObjModel("../tree.obj", &model_vertices, &model_texels, &model_normals, &model_faces);
+  Eigen::MatrixXf vertices(3, model_vertices.size());
+  for (int col = 0; col < model_vertices.size(); ++col) {
+    vertices.col(col) = model_vertices[col];
+  }
+  std::vector<GLuint> indices;
+  for (int face_id = 0; face_id < model_faces.size(); ++face_id) {
+    const wvu::Face& face = model_faces[face_id];
+    indices.push_back(face.vertex_indices[0]);
+    indices.push_back(face.vertex_indices[1]);
+    indices.push_back(face.vertex_indices[2]);
+  }
+  const std::string texture_filepath = "../test.jpg";
+  const GLuint texture_id = LoadTexture(texture_filepath);
+
+  models_to_draw->push_back(new Model(Eigen::Vector3f(0, 1, 0), Eigen::Vector3f(0,-2,-9), vertices, indices, Eigen::Vector3f(0, 0, 0)));
+
 }
 
 GLuint LoadTexture(const std::string& texture_filepath) {

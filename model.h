@@ -47,23 +47,13 @@ namespace wvu {
 // Class that holds the necessary information of a 3D model in OpenGL.
 class Model {
 public:
-  // Constructor.
-  // Params
-  //  orientation  Axis of rotation whose norm is the angle
-  //     (aka Rodrigues vector).
-  //  position  The position of the object in the world.
-  //  vertices  The vertices forming the object.
   Model(const Eigen::Vector3f& orientation,
         const Eigen::Vector3f& position,
-        const Eigen::MatrixXf& vertices);
+        const Eigen::MatrixXf& vertices,
+        const std::vector<GLuint>& indices,
+        const Eigen::Vector3f& movement);
 
-  // Constructor.
-  // Params
-  //  orientation  Axis of rotation whose norm is the angle
-  //     (aka Rodrigues vector).
-  //  position  The position of the object in the world.
-  //  vertices  The vertices forming the object.
-  //  indices  Indices for EBO.
+
   Model(const Eigen::Vector3f& orientation,
         const Eigen::Vector3f& position,
         const Eigen::MatrixXf& vertices,

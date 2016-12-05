@@ -68,6 +68,7 @@ const std::string vertex_shader_src =
 
 const std::string fragment_shader_src =
     "#version 330 core\n"
+    "uniform vec4 vertex_color;\n"
     "out vec4 color;\n"
     "in vec2 texel;\n"
     "uniform sampler2D texture_sampler;\n"
@@ -140,7 +141,7 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
   for (Model* model : *models_to_draw) {
     Eigen::Vector3f orientation = model->orientation();
     Eigen::Vector3f movement = model->movement();
-    model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
+    // model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
     model->Draw(shader_program, projection, view);
 
   }
@@ -150,7 +151,7 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
 
 void ConstructModels(std::vector<Model*>* models_to_draw) {
   wvu::CreateVerticesModel(models_to_draw);
-  // wvu::CreateLoadedModel(models_to_draw);
+  wvu::CreateLoadedModel(models_to_draw);
   for (Model* model : *models_to_draw) {
     model->SetVerticesIntoGpu();
   }
