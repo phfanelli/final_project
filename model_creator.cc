@@ -50,7 +50,7 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
 
     const std::string texture_filepath2 = "../texture2.png";
     const GLuint texture_id2 = LoadTexture(texture_filepath2);
-    Eigen::Vector3f orientation2(0, 1, 0);
+    Eigen::Vector3f orientation2(0, 0, 1);
 
     models_to_draw->push_back(new Model(orientation2, Eigen::Vector3f(0,-2,-9), vertices_for_train_middle, indices_for_train_middle, texture_id2, 2));
 
