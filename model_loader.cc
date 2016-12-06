@@ -129,8 +129,8 @@ void ParseTexelLine(const std::string& line,
                     std::vector<Eigen::Vector2f>* texels) {
   VLOG(1) << "Texel line: " << line;
   float x, y;
-  char temp;
-  sscanf(line.c_str(), "%c %f %f", &temp, &x, &y);
+  char temp[kStringSize];
+  sscanf(line.c_str(), "%s %f %f", &temp[0], &x, &y);
   texels->emplace_back(x, y);
 }
 
@@ -138,8 +138,8 @@ void ParseNormalLine(const std::string& line,
                      std::vector<Eigen::Vector3f>* normals) {
   VLOG(1) << "Normal line: " << line;
   float x, y ,z;
-  char temp;
-  sscanf(line.c_str(), "%c %f %f %f", &temp, &x, &y, &z);
+  char temp[kStringSize];
+  sscanf(line.c_str(), "%s %f %f %f", &temp[0], &x, &y, &z);
   normals->emplace_back(x, y, z);
 }
 
@@ -194,4 +194,3 @@ bool LoadObjModel(const std::string& filepath,
 }
 
 }  // namespace wvu
-

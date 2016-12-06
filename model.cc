@@ -52,31 +52,30 @@ namespace wvu {
   Model::Model(const Eigen::Vector3f& orientation,
                const Eigen::Vector3f& position,
                const Eigen::MatrixXf& vertices,
-               const std::vector<GLuint>& indices,
-               const Eigen::Vector3f& movement) {
+               const std::vector<GLuint>& indices) {
     orientation_ = orientation;
     position_ = position;
     vertices_ = vertices;
     indices_ = indices;
     texture_id_ = -1;
-    movement_ = movement;
+    movement_ = 0;
     vertex_buffer_object_id_ = 0;
     vertex_array_object_id_ = 0;
     element_buffer_object_id_ = 0;
   }
 
 Model::Model(const Eigen::Vector3f& orientation,
-             const Eigen::Vector3f& position,
+             const Eigen::Vector3f& circle_center,
              const Eigen::MatrixXf& vertices,
              const std::vector<GLuint>& indices,
              const GLuint& texture_id,
-             const Eigen::Vector3f& movement) {
+             const GLuint& movement) {
   orientation_ = orientation;
-  position_ = position;
   vertices_ = vertices;
   indices_ = indices;
   texture_id_ = texture_id;
   movement_ = movement;
+  circle_center_ = circle_center;
   vertex_buffer_object_id_ = 0;
   vertex_array_object_id_ = 0;
   element_buffer_object_id_ = 0;
@@ -103,6 +102,10 @@ void Model::set_orientation(const Eigen::Vector3f& orientation) {
 // Setters set members by *copying* input parameters.
 void Model::set_position(const Eigen::Vector3f& position) {
   position_ = position;
+}
+
+void Model::set_circle_center(const Eigen::Vector3f& center) {
+  circle_center_ = center;
 }
 
 Eigen::Vector3f* Model::mutable_orientation() {
@@ -133,8 +136,12 @@ const GLuint& Model::texture_id() const {
   return texture_id_;
 }
 
-const Eigen::Vector3f& Model::movement() const {
+const GLuint& Model::movement() const {
   return movement_;
+}
+
+const Eigen::Vector3f& Model::circle_center() {
+  return circle_center_;
 }
 
 const GLuint Model::vertex_buffer_object_id() const {
@@ -219,7 +226,7 @@ void Model::Draw(const ShaderProgram& shader_program,
   if(texture_id() != -1) {
     glBindTexture(GL_TEXTURE_2D, texture_id_);
   } else {
-    
+
   }
 
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model_matrix.data());

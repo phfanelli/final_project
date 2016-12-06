@@ -47,19 +47,21 @@ namespace wvu {
 // Class that holds the necessary information of a 3D model in OpenGL.
 class Model {
 public:
+
+  // for still models
   Model(const Eigen::Vector3f& orientation,
         const Eigen::Vector3f& position,
         const Eigen::MatrixXf& vertices,
-        const std::vector<GLuint>& indices,
-        const Eigen::Vector3f& movement);
+        const std::vector<GLuint>& indices);
 
 
+  // for moving models
   Model(const Eigen::Vector3f& orientation,
         const Eigen::Vector3f& position,
         const Eigen::MatrixXf& vertices,
         const std::vector<GLuint>& indices,
         const GLuint& texture_id,
-        const Eigen::Vector3f& movement);
+        const GLuint& movement);
 
   // Destructor.
   // NOTE: Destructors need to be called when instances of this class are
@@ -87,6 +89,8 @@ public:
 
   // Sets the position of the model.
   void set_position(const Eigen::Vector3f& position);
+  void set_circle_center(const Eigen::Vector3f& position);
+
 
   // If we want to avoid copying, we can return a pointer to
   // the member. Note that making public the attributes work
@@ -114,7 +118,8 @@ public:
 
   // Returns a const reference of the texture_id_ for an EBO.
   const GLuint& texture_id() const;
-  const Eigen::Vector3f& movement() const;
+  const GLuint& movement() const;
+  const Eigen::Vector3f& circle_center();
 
   // Returns the VBO id associated to this model.
   const GLuint vertex_buffer_object_id();
@@ -142,7 +147,8 @@ private:
   std::vector<GLuint> indices_;
 
   GLuint texture_id_;
-  Eigen::Vector3f movement_;
+  GLuint movement_;
+  Eigen::Vector3f circle_center_;
   // Vertex buffer object id.
   GLuint vertex_buffer_object_id_;
   // Vertex array object id.
