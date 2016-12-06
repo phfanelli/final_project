@@ -58,7 +58,7 @@ namespace wvu {
     vertices_ = vertices;
     indices_ = indices;
     texture_id_ = -1;
-    movement_ = 0;
+    radius_ = 0;
     vertex_buffer_object_id_ = 0;
     vertex_array_object_id_ = 0;
     element_buffer_object_id_ = 0;
@@ -69,12 +69,14 @@ Model::Model(const Eigen::Vector3f& orientation,
              const Eigen::MatrixXf& vertices,
              const std::vector<GLuint>& indices,
              const GLuint& texture_id,
-             const GLuint& movement) {
+             const Eigen::Vector3f& movement,
+             const GLuint& radius) {
   orientation_ = orientation;
   vertices_ = vertices;
   indices_ = indices;
   texture_id_ = texture_id;
   movement_ = movement;
+  radius_ = radius;
   circle_center_ = circle_center;
   vertex_buffer_object_id_ = 0;
   vertex_array_object_id_ = 0;
@@ -136,8 +138,12 @@ const GLuint& Model::texture_id() const {
   return texture_id_;
 }
 
-const GLuint& Model::movement() const {
+const Eigen::Vector3f& Model::movement() const {
   return movement_;
+}
+
+const GLuint& Model::radius() const {
+  return radius_;
 }
 
 const Eigen::Vector3f& Model::circle_center() {

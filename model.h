@@ -61,7 +61,8 @@ public:
         const Eigen::MatrixXf& vertices,
         const std::vector<GLuint>& indices,
         const GLuint& texture_id,
-        const GLuint& movement);
+        const Eigen::Vector3f& movement,
+        const GLuint& radius);
 
   // Destructor.
   // NOTE: Destructors need to be called when instances of this class are
@@ -118,8 +119,9 @@ public:
 
   // Returns a const reference of the texture_id_ for an EBO.
   const GLuint& texture_id() const;
-  const GLuint& movement() const;
+  const Eigen::Vector3f& movement() const;
   const Eigen::Vector3f& circle_center();
+  const GLuint& radius() const;
 
   // Returns the VBO id associated to this model.
   const GLuint vertex_buffer_object_id();
@@ -147,7 +149,8 @@ private:
   std::vector<GLuint> indices_;
 
   GLuint texture_id_;
-  GLuint movement_;
+  Eigen::Vector3f movement_;
+  GLuint radius_;
   Eigen::Vector3f circle_center_;
   // Vertex buffer object id.
   GLuint vertex_buffer_object_id_;

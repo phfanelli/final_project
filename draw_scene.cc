@@ -146,13 +146,17 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
     Eigen::Vector3f pos = model->position();
     model->set_position(Eigen::Vector3f(pos[0]*cos(angle) - pos[2]*sin(angle), pos[1], pos[2]*sin(angle) + pos[0]*sin(angle) ));
 */
-    // model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
     Eigen::Vector3f circle_center = model->circle_center();
     Eigen::Vector3f position = model->position();
-    GLuint movement = model->movement();
-    if (movement != 0) {
-      model->set_position(Eigen::Vector3f(movement*cos(glfwGetTime()) + circle_center(0), circle_center(1), movement*sin(glfwGetTime()) + circle_center(2)));
+    GLuint radius = model->radius();
+    Eigen::Vector3f movement = model->movement();
+    // model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
+
+    if (radius != 0) {
+      // model->set_position(Eigen::Vector3f(radius+circle_center(0), circle_center(1), radius+circle_center(2)));
+      model->set_position(Eigen::Vector3f(radius*cos(glfwGetTime()) + circle_center(0), circle_center(1), radius*sin(glfwGetTime()) + circle_center(2)));
     }
+
     model->Draw(shader_program, projection, view);
 
   }
