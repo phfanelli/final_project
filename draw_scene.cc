@@ -32,7 +32,7 @@
 // Please contact the author of this library if you have any questions.
 // TODO: Add your names and emails using the following format:
 // Author: Shelby Shuff (sshuff@mix.wvu.edu)
-// Author:
+// Author: Philip Fanelli (phfanelli@mix.wvu.edu)
 
 #include <iostream>
 #include <string>
@@ -134,13 +134,20 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
                  const Eigen::Matrix4f& projection,
                  const Eigen::Matrix4f& view,
                  std::vector<Model*>* models_to_draw,
-                 GLFWwindow* window) {
+                 GLFWwindow* window,
+                 GLfloat angle) {
   ClearTheFrameBuffer();
   shader_program.Use();
   // Draw the models.
   for (Model* model : *models_to_draw) {
     Eigen::Vector3f orientation = model->orientation();
     Eigen::Vector3f movement = model->movement();
+
+/*
+    //train rotation code
+    Eigen::Vector3f pos = model->position();
+    model->set_position(Eigen::Vector3f(pos[0]*cos(angle) - pos[2]*sin(angle), pos[1], pos[2]*sin(angle) + pos[0]*sin(angle) ));
+*/
     // model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
     model->Draw(shader_program, projection, view);
 
@@ -216,10 +223,18 @@ int main(int argc, char** argv) {
                                               near_plane, far_plane);
   const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
+//train rotation angle and speed
+  GLfloat angle = 0.0f;
+  const GLfloat rotation_speed = 2.0f;
+
   // Loop until the user closes the window.
   while (!glfwWindowShouldClose(window)) {
     // Render the scene!
-    RenderScene(shader_program, projection, view, &models_to_draw, window);
+
+    //angle changing over time
+    angle = rotation_speed * static_cast<GLfloat>(glfwGetTime()) * M_PI / 180.f;
+
+    RenderScene(shader_program, projection, view, &models_to_draw, window, angle);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

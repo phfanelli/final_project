@@ -52,6 +52,56 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
   Eigen::Vector3f movement(0.0006,0.0006,0);
 
   models_to_draw->push_back(new Model(orientation, Eigen::Vector3f(1,0.5f,-8), cube_vertices, cube_indices, texture_id, movement));
+
+
+  //middle train car
+  std::vector<GLuint> indices_for_train_middle = {
+      3, 0, 1,  // First triangle.
+      3, 1, 2,  // Second triangle.
+      7, 4, 5,  // Third triangle.
+      7, 5, 6,  // Fourth triangle.
+      7, 4, 0,  // Fifth triangle.
+      7, 0, 3,  // Sixth triangle.
+      2, 1, 5,  // Seventh triangle.
+      2, 5, 6,  // Eigth triangle.
+      7, 3, 2,  // Ninth Triangle
+      7, 2, 6,  // Tenth Triangle
+      0, 4, 5,  // Eleventh Triangle
+      0, 5, 1   // Twelfth Triangle
+    };
+    Eigen::MatrixXf vertices_for_train_middle(5, 8);
+    vertices_for_train_middle.block(0,0,3,1) = Eigen::Vector3f(-1.0f,0.0f,0.0f);
+    vertices_for_train_middle.block(3,0,2,1) = Eigen::Vector2f(0,0);
+
+    vertices_for_train_middle.block(0,1,3,1) = Eigen::Vector3f(1.0f,0.0f,0.0f);
+    vertices_for_train_middle.block(3,1,2,1) = Eigen::Vector2f(1,0);
+
+    vertices_for_train_middle.block(0,2,3,1) = Eigen::Vector3f(1.0f,1.0f,0.0f);
+    vertices_for_train_middle.block(3,2,2,1) = Eigen::Vector2f(1,1);
+
+    vertices_for_train_middle.block(0,3,3,1) = Eigen::Vector3f(-1.0f,1.0f,0.0f);
+    vertices_for_train_middle.block(3,3,2,1) = Eigen::Vector2f(0,1);
+
+    vertices_for_train_middle.block(0,4,3,1) = Eigen::Vector3f(-1.0f,0.0f,-1.0f);
+    vertices_for_train_middle.block(3,4,2,1) = Eigen::Vector2f(0,0);
+
+    vertices_for_train_middle.block(0,5,3,1) = Eigen::Vector3f(1.0f,0.0f,-1.0f);
+    vertices_for_train_middle.block(3,5,2,1) = Eigen::Vector2f(1,0);
+
+    vertices_for_train_middle.block(0,6,3,1) = Eigen::Vector3f(1.0f,1.0f,-1.0f);
+    vertices_for_train_middle.block(3,6,2,1) = Eigen::Vector2f(1,1);
+
+    vertices_for_train_middle.block(0,7,3,1) = Eigen::Vector3f(-1.0f,1.0f,-1.0f);
+    vertices_for_train_middle.block(3,7,2,1) = Eigen::Vector2f(0,1);
+
+    const std::string texture_filepath2 = "../texture2.png";
+    const GLuint texture_id2 = LoadTexture(texture_filepath);
+    Eigen::Vector3f orientation2(1, 0, 0);
+    Eigen::Vector3f movement2(0.0006,0.0006,0);
+
+    models_to_draw->push_back(new Model(orientation2, Eigen::Vector3f(-2.5,0,-10), vertices_for_train_middle, indices_for_train_middle, texture_id2, movement2));
+
+
 }
 
 void CreateLoadedModel(std::vector<Model*>* models_to_draw) {
