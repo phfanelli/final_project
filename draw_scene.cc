@@ -34,6 +34,13 @@
 // Author: Shelby Shuff (sshuff@mix.wvu.edu)
 // Author: Philip Fanelli (phfanelli@mix.wvu.edu)
 
+// Use the right namespace for google flags.
+#ifdef GFLAGS_NAMESPACE_GOOGLE
+#define GLUTILS_GFLAGS_NAMESPACE google
+#else
+#define GLUTILS_GFLAGS_NAMESPACE gflags
+#endif
+
 #include <iostream>
 #include <string>
 
@@ -45,36 +52,24 @@
 #include "transformations.h"
 #include "camera_utils.h"
 #include "model_creator.h"
+
+#include <gflags/gflags.h>
+#include <glog/logging.h>
 // TODO: Include the headers you need for your project.
+//Google flags for our GLSL shaders
+DEFINE_string(vertex_shader_filepath, "",
+              "Filepath of the vertex shader.");
+DEFINE_string(fragment_shader_filepath, "",
+              "Filepath of the fragment shader.");
+
+
 namespace {
 using wvu::Model;
 
 constexpr int kWindowWidth = 640;
 constexpr int kWindowHeight = 480;
 
-const std::string vertex_shader_src =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 position;\n"
-    "layout (location = 1) in vec2 passed_texel;\n"
-    "uniform mat4 model;\n"
-    "uniform mat4 view;\n"
-    "uniform mat4 projection;\n"
-    "out vec2 texel;\n"
-    "\n"
-    "void main() {\n"
-    "gl_Position = projection * view * model * vec4(position, 1.0f);\n"
-    "texel = passed_texel;\n"
-    "}\n";
 
-const std::string fragment_shader_src =
-    "#version 330 core\n"
-    "uniform vec4 vertex_color;\n"
-    "out vec4 color;\n"
-    "in vec2 texel;\n"
-    "uniform sampler2D texture_sampler;\n"
-    "void main() {\n"
-    "color = texture(texture_sampler, texel);\n"
-    "}\n";
 
 static void ErrorCallback(int error, const char* description) {
   std::cerr << "ERROR: " << description << std::endl;
@@ -117,8 +112,15 @@ void ClearTheFrameBuffer() {
 
 bool CreateShaderProgram(wvu::ShaderProgram* shader_program) {
   if (shader_program == nullptr) return false;
-  shader_program->LoadVertexShaderFromString(vertex_shader_src);
-  shader_program->LoadFragmentShaderFromString(fragment_shader_src);
+  //make local accessors to the google flag GLSL's
+  const std::string fragment_shader_filepath = FLAGS_fragment_shader_filepath;
+
+  const std::string vertex_shader_filepath = FLAGS_vertex_shader_filepath;
+
+  shader_program->LoadFragmentShaderFromFile(fragment_shader_filepath);
+  shader_program->LoadVertexShaderFromFile(vertex_shader_filepath);
+  std::cout << vertex_shader_filepath << std::endl;
+  std::cout << fragment_shader_filepath << std::endl;
   std::string error_info_log;
   if (!shader_program->Create(&error_info_log)) {
     std::cout << "ERROR: " << error_info_log << "\n";
@@ -189,6 +191,8 @@ void DeleteModels(std::vector<Model*>* models_to_draw) {
 }
 
 int main(int argc, char** argv) {
+  GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
+  google::InitGoogleLogging(argv[0]);
   if (!glfwInit()) {
     return -1;
   }
