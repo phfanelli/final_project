@@ -139,6 +139,7 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
   ClearTheFrameBuffer();
   shader_program.Use();
   // Draw the models.
+  int i=0;
   for (Model* model : *models_to_draw) {
     Eigen::Vector3f orientation = model->orientation();
 /*
@@ -150,13 +151,19 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
     Eigen::Vector3f position = model->position();
     GLuint radius = model->radius();
     Eigen::Vector3f movement = model->movement();
-    // model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
+    model->set_orientation(Eigen::Vector3f(orientation(0)+movement(0), orientation(1)+movement(1), orientation(2)+movement(2)));
 
     if (radius != 0) {
+      if(i==0) {
       // model->set_position(Eigen::Vector3f(radius+circle_center(0), circle_center(1), radius+circle_center(2)));
-      model->set_position(Eigen::Vector3f(radius*cos(glfwGetTime()) + circle_center(0), circle_center(1), radius*sin(glfwGetTime()) + circle_center(2)));
-    }
+        model->set_position(Eigen::Vector3f(radius*cos(glfwGetTime()) + circle_center(0), circle_center(1), radius*sin(glfwGetTime()) + circle_center(2)));
+        i++;
+      } else {
+        model->set_position(Eigen::Vector3f(-(radius*cos(glfwGetTime()) + circle_center(0)), circle_center(1), radius*sin(glfwGetTime()) + circle_center(2)));
 
+      }
+    }
+    // i++;
     model->Draw(shader_program, projection, view);
 
   }
@@ -225,7 +232,7 @@ int main(int argc, char** argv) {
   const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
   const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
   const float near_plane = 0.1f;
-  const float far_plane = 10.0f;
+  const float far_plane = 20.0f;
   const Eigen::Matrix4f& projection =
       wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio,
                                               near_plane, far_plane);
