@@ -18,36 +18,52 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
       7, 0, 3,  // Sixth triangle.
       2, 1, 5,  // Seventh triangle.
       2, 5, 6,  // Eigth triangle.
-      7, 3, 2,  // Ninth Triangle
-      7, 2, 6,  // Tenth Triangle
+    //  7, 3, 2,  // Ninth Triangle
+    //  7, 2, 6,  // Tenth Triangle
       0, 4, 5,  // Eleventh Triangle
-      0, 5, 1   // Twelfth Triangle
+      0, 5, 1,   // Twelfth Triangle
+      10, 8, 9,
+      10, 9, 11
     };
-    Eigen::MatrixXf gift_vertices(5, 8);
+    Eigen::MatrixXf gift_vertices(5, 12);
+    //0
     gift_vertices.block(0,0,3,1) = Eigen::Vector3f(-1.0f,0.0f,0.0f);
     gift_vertices.block(3,0,2,1) = Eigen::Vector2f(0,0);
-
+    //1
     gift_vertices.block(0,1,3,1) = Eigen::Vector3f(1.0f,0.0f,0.0f);
     gift_vertices.block(3,1,2,1) = Eigen::Vector2f(1,0);
-
+    //2
     gift_vertices.block(0,2,3,1) = Eigen::Vector3f(1.0f,1.0f,0.0f);
     gift_vertices.block(3,2,2,1) = Eigen::Vector2f(1,1);
-
+    //3
     gift_vertices.block(0,3,3,1) = Eigen::Vector3f(-1.0f,1.0f,0.0f);
     gift_vertices.block(3,3,2,1) = Eigen::Vector2f(0,1);
-
+    //4
     gift_vertices.block(0,4,3,1) = Eigen::Vector3f(-1.0f,0.0f,-1.0f);
-    gift_vertices.block(3,4,2,1) = Eigen::Vector2f(0,0);
-
+    gift_vertices.block(3,4,2,1) = Eigen::Vector2f(1,0);
+    //5
     gift_vertices.block(0,5,3,1) = Eigen::Vector3f(1.0f,0.0f,-1.0f);
-    gift_vertices.block(3,5,2,1) = Eigen::Vector2f(1,0);
-
+    gift_vertices.block(3,5,2,1) = Eigen::Vector2f(0,0);
+    //6
     gift_vertices.block(0,6,3,1) = Eigen::Vector3f(1.0f,1.0f,-1.0f);
-    gift_vertices.block(3,6,2,1) = Eigen::Vector2f(1,1);
-
+    gift_vertices.block(3,6,2,1) = Eigen::Vector2f(0,1);
+    //7
     gift_vertices.block(0,7,3,1) = Eigen::Vector3f(-1.0f,1.0f,-1.0f);
-    gift_vertices.block(3,7,2,1) = Eigen::Vector2f(0,1);
+    gift_vertices.block(3,7,2,1) = Eigen::Vector2f(1,1);
 
+    //top
+    //8
+    gift_vertices.block(0,8,3,1) = Eigen::Vector3f(-1.0f,1.0f,0.0f);
+    gift_vertices.block(3,8,2,1) = Eigen::Vector2f(0,0);
+    //9
+    gift_vertices.block(0,9,3,1) = Eigen::Vector3f(1.0f,1.0f,0.0f);
+    gift_vertices.block(3,9,2,1) = Eigen::Vector2f(1,0);
+    //10
+    gift_vertices.block(0,10,3,1) = Eigen::Vector3f(-1.0f,1.0f,-1.0f);
+    gift_vertices.block(3,10,2,1) = Eigen::Vector2f(0,1);
+    //11
+    gift_vertices.block(0,11,3,1) = Eigen::Vector3f(1.0f,1.0f,-1.0f);
+    gift_vertices.block(3,11,2,1) = Eigen::Vector2f(1,1);
     const std::string texture_filepath = "../texture2.png";
     const GLuint texture_id = LoadTexture(texture_filepath);
     Eigen::Vector3f orientation(0, 1, 0);
