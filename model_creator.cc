@@ -64,12 +64,12 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
         7, 0, 3,  // Sixth triangle.
         2, 1, 5,  // Seventh triangle.
         2, 5, 6,  // Eigth triangle.
-        7, 3, 2,  // Ninth Triangle
-        7, 2, 6,  // Tenth Triangle
-        0, 4, 5,  // Eleventh Triangle
-        0, 5, 1   // Twelfth Triangle
+        0, 4, 5,  // Ninth Triangle
+        0, 5, 1,  // Tenth Triangle
+        10, 8, 9, // Eleventh
+        10,9,11   // Twelfth
       };
-      Eigen::MatrixXf gift2_vertices(5, 8);
+      Eigen::MatrixXf gift2_vertices(5, 12);
       // 0
       gift2_vertices.block(0,0,3,1) = Eigen::Vector3f(0.0f,0.0f,0.0f);
       gift2_vertices.block(3,0,2,1) = Eigen::Vector2f(0,0);
@@ -102,9 +102,24 @@ void CreateVerticesModel(std::vector<Model*>* models_to_draw) {
       gift2_vertices.block(0,7,3,1) = Eigen::Vector3f(0.0f,1.0f,-1.0f);
       gift2_vertices.block(3,7,2,1) = Eigen::Vector2f(1,1);
 
+      // 8
+      gift2_vertices.block(0,8,3,1) = Eigen::Vector3f(0.0f,1.0f,0.0f);
+      gift2_vertices.block(3,8,2,1) = Eigen::Vector2f(0,0);
+
+      // 9
+      gift2_vertices.block(0,9,3,1) = Eigen::Vector3f(1.0f,1.0f,0.0f);
+      gift2_vertices.block(3,9,2,1) = Eigen::Vector2f(1,0);
+
+      // 10
+      gift2_vertices.block(0,10,3,1) = Eigen::Vector3f(0.0f,1.0f,-1.0f);
+      gift2_vertices.block(3,10,2,1) = Eigen::Vector2f(0,1);
+
+      // 11
+      gift2_vertices.block(0,11,3,1) = Eigen::Vector3f(1.0f,1.0f,-1.0f);
+      gift2_vertices.block(3,11,2,1) = Eigen::Vector2f(1,1);
 
 
-      const std::string texture_filepath2 = "../texture2.png";
+      const std::string texture_filepath2 = "../texture.png";
       const GLuint texture_id2 = LoadTexture(texture_filepath2);
       Eigen::Vector3f orientation2(0, 1, 0);
       Eigen::Vector3f movement2(0,0.005,0);
