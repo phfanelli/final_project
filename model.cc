@@ -232,7 +232,7 @@ void Model::Draw(const ShaderProgram& shader_program,
   if(texture_id() != -1) {
     glBindTexture(GL_TEXTURE_2D, texture_id_);
   } else {
-
+    // glColor3f(1.0f, 1.0f, 0.0f);
   }
 
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model_matrix.data());
